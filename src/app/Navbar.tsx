@@ -12,15 +12,17 @@ import {
 	navigationMenuTriggerStyle,
 } from '@/components/ui/navigation-menu';
 import Link from 'next/link';
+import ThemeToggle from '@/components/themeToggle';
 
 export function Navbar() {
 	return (
 		<div className="border-b py-4">
-			<div className="container mx-auto flex justify-between">
+			<nav className="container mx-auto flex justify-center gap-4 items-center">
 				<div className="text-xl font-bold">Codenames</div>
-
-				<nav className="flex gap-4"></nav>
-			</div>
+				<span className="grow"></span>
+				<ThemeToggle />
+				<span></span>
+			</nav>
 		</div>
 	);
 }

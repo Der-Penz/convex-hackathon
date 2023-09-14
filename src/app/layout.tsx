@@ -1,12 +1,9 @@
-import './globals.css';
+import ThemeProvider from '@/components/themeProvider';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { ClerkProvider, useAuth } from '@clerk/clerk-react';
 import ConvexClientProvider from './ConvexClientProvider';
-import { ConvexProviderWithClerk } from 'convex/react-clerk';
 import { Navbar } from './Navbar';
-import { ConvexReactClient } from 'convex/react';
-import { env } from 'process';
+import './globals.css';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -23,10 +20,16 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={inter.className}>
-				<ConvexClientProvider>
-					<Navbar />
-					{children}
-				</ConvexClientProvider>
+				<ThemeProvider
+					attribute="class"
+					defaultTheme="system"
+					enableSystem
+				>
+					<ConvexClientProvider>
+						<Navbar />
+						{children}
+					</ConvexClientProvider>
+				</ThemeProvider>
 			</body>
 		</html>
 	);
