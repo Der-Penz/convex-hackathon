@@ -1,4 +1,4 @@
-import { mutation } from './_generated/server';
+import { mutation, query } from './_generated/server';
 import { v } from 'convex/values';
 import { generateRandomName } from '../src/lib/types/name';
 import { GAME_ROLES, GAME_TEAMS } from '../src/lib/types/game';
@@ -7,7 +7,7 @@ export const createGame = mutation({
 	handler: async (ctx) => {
 		const newGameId = await ctx.db.insert('game', {
 			state: 'lobby',
-			currentTeam: 'red',
+			currentTeam: 'Red',
 			spymaster_word: '',
 		});
 		return { joinId: newGameId };
@@ -34,15 +34,35 @@ export const joinGame = mutation({
 		) {
 			name = generateRandomName();
 		}
-		console.log({ name });
+
+		const isHost = (await ctx.db
+			.query('player')
+			.filter((q) => q.eq(q.field('gameId'), args.joinId))
+			.first())
+			? false
+			: true;
 
 		const newPlayerId = await ctx.db.insert('player', {
 			gameId: args.joinId,
 			name: name,
-			role: 'spectator',
-			team: Math.random() >= 0.5 ? 'red' : 'blue',
+			role: 'Spectator',
+			team: Math.random() >= 0.5 ? 'Red' : 'Blue',
+			host: isHost,
 		});
 		return { name: name, gameID: args.joinId, playerId: newPlayerId };
+	},
+});
+
+export const leaveGame = mutation({
+	args: { playerId: v.id('player') },
+	handler: async (ctx, args) => {
+		try {
+			await ctx.db.delete(args.playerId);
+
+			return { deleted: true };
+		} catch (err) {
+			return { deleted: false };
+		}
 	},
 });
 
@@ -57,9 +77,9 @@ export const joinTeam = mutation({
 		playerId: v.id('player'),
 	},
 	handler: async (ctx, args) => {
-		if (args.role === 'spectator') {
+		if (args.role === 'Spectator') {
 			await ctx.db.patch(args.playerId, {
-				role: 'spectator',
+				role: 'Spectator',
 			});
 		} else {
 			await ctx.db.patch(args.playerId, {
@@ -70,5 +90,14 @@ export const joinTeam = mutation({
 
 		const newPlayer = await ctx.db.get(args.playerId);
 		return { ...newPlayer };
+	},
+});
+
+export const getGame = query({
+	args: {
+		gameId: v.id('game'),
+	},
+	handler(ctx, args) {
+		return ctx.db.get(args.gameId);
 	},
 });

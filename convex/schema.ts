@@ -24,6 +24,7 @@ export default defineSchema({
 			v.literal(GAME_ROLES.SPYMASTER)
 		),
 		name: v.string(),
+		host: v.boolean(),
 	}),
 	word: defineTable({
 		word: v.string(),

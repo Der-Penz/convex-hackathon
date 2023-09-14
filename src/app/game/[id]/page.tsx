@@ -3,8 +3,10 @@
 import { useMutation, useQuery } from 'convex/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
+import TeamCard from './teamCard';
 import { api } from '../../../../convex/_generated/api';
 import { Id } from '../../../../convex/_generated/dataModel';
+import Game from './game';
 
 type Props = {
 	params: { id: string };
@@ -18,7 +20,7 @@ export default function Page({ params: { id }, searchParams }: Props) {
 	const router = useRouter();
 
 	const [playerId, setPlayerId] = useState<Id<'player'> | undefined>();
-	const player = useQuery(api.player.getPlayer, { playerId: playerId! });
+	const [gameId, setGameId] = useState<Id<'game'> | undefined>();
 
 	const joinGameMutation = useMutation(api.game.joinGame);
 
@@ -36,6 +38,7 @@ export default function Page({ params: { id }, searchParams }: Props) {
 				}
 
 				setPlayerId(joinedGame.playerId);
+				setGameId(joinedGame.gameID);
 			} catch {
 				router.push(`/`);
 			}
@@ -44,11 +47,9 @@ export default function Page({ params: { id }, searchParams }: Props) {
 		joinGame();
 	}, []);
 
-	return (
-		<div className="text-6xl">
-			Game {id}
-			<p>{player?.name}</p>
-			<p>{player?.role}</p>
-		</div>
-	);
+	if (!gameId || !playerId) {
+		return <div>Joining game</div>;
+	}
+
+	return <Game gameId={gameId} playerId={playerId} />;
 }

@@ -5,12 +5,12 @@ export const GAME_STATE = {
 } as const;
 
 export const GAME_TEAMS = {
-	RED: 'red',
-	BLUE: 'blue',
-	BLACK: 'black',
+	RED: 'Red',
+	BLUE: 'Blue',
+	BLACK: 'Black',
 } as const;
 export const GAME_ROLES = {
-	SPYMASTER: 'spymaster',
-	OPERATIVE: 'operative',
-	SPECTATOR: 'spectator',
+	SPYMASTER: 'Spymaster',
+	OPERATIVE: 'Operative',
+	SPECTATOR: 'Spectator',
 } as const;
