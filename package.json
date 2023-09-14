@@ -12,6 +12,8 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/clerk-react": "^4.12.8",
+    "@clerk/nextjs": "^4.23.5",
     "@hookform/error-message": "^2.0.1",
     "@hookform/resolvers": "^3.3.1",
     "@radix-ui/react-hover-card": "^1.0.6",

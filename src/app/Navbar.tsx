@@ -17,28 +17,9 @@ export function Navbar() {
 	return (
 		<div className="border-b py-4">
 			<div className="container mx-auto flex justify-between">
-				<div className="text-xl font-bold">
-					MultiMark{' '}
-					<span className="text-xs font-thin">
-						Collaborative markdown editor
-					</span>
-				</div>
+				<div className="text-xl font-bold">Codenames</div>
 
-				<nav className="flex gap-4">
-					<NavigationMenu>
-						<NavigationMenuList>
-							<NavigationMenuItem>
-								<Link href="/document/new" legacyBehavior passHref>
-									<NavigationMenuLink
-										className={navigationMenuTriggerStyle()}
-									>
-										Create document
-									</NavigationMenuLink>
-								</Link>
-							</NavigationMenuItem>
-						</NavigationMenuList>
-					</NavigationMenu>
-				</nav>
+				<nav className="flex gap-4"></nav>
 			</div>
 		</div>
 	);
