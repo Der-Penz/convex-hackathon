@@ -22,12 +22,29 @@ export const createGame = mutation({
 });
 
 export const joinGame = mutation({
-	args: { name: v.optional(v.string()), joinId: v.id('game') },
+	args: {
+		name: v.optional(v.string()),
+		joinId: v.id('game'),
+		session: v.optional(v.id('player')),
+	},
 	handler: async (ctx, args) => {
 		//check if game exists
 		const existsGame = await ctx.db.get(args.joinId);
 		if (!existsGame) {
 			return;
+		}
+
+		if (args.session) {
+			const oldPlayer = await ctx.db.get(args.session);
+
+			//reconnect
+			if (oldPlayer && oldPlayer.gameId === args.joinId) {
+				return {
+					name: oldPlayer.name,
+					gameID: args.joinId,
+					playerId: oldPlayer._id,
+				};
+			}
 		}
 
 		let name = !args.name ? generateRandomName() : args.name;

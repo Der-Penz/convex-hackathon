@@ -30,6 +30,9 @@ export default function Page({ params: { id }, searchParams }: Props) {
 				const joinedGame = await joinGameMutation({
 					joinId: id as Id<'game'>,
 					name: searchParams.name,
+					session:
+						(sessionStorage.getItem('session') as Id<'player'>) ||
+						undefined,
 				});
 
 				if (!joinedGame) {
@@ -39,6 +42,9 @@ export default function Page({ params: { id }, searchParams }: Props) {
 
 				setPlayerId(joinedGame.playerId);
 				setGameId(joinedGame.gameID);
+
+				//save the player id for refreshing
+				sessionStorage.setItem('session', joinedGame.playerId);
 			} catch {
 				router.push(`/`);
 			}
