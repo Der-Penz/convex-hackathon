@@ -23,6 +23,7 @@ import { useRouter } from 'next/navigation';
 import { FaCopy } from 'react-icons/fa';
 import { GameSettings as Settings } from '@/lib/types/game';
 import { GAME_WORD_COLLECTIONS } from '@/lib/constants/game';
+import { useToast } from '@/components/ui/use-toast';
 
 type Props = {
 	gameId: Id<'game'>;
@@ -31,12 +32,13 @@ type Props = {
 
 function game({ gameId, playerId }: Props) {
 	const [settings, setSettings] = useState<Settings>({
-		blackCards: true,
+		blackCard: true,
 		cardsToGuess: 9,
 		timer: false,
 		collection: GAME_WORD_COLLECTIONS[0].name,
 	});
 
+	const { toast } = useToast();
 	const router = useRouter();
 	const self = useQuery(api.player.getPlayer, { playerId });
 	const game = useQuery(api.player.getPlayers, {
@@ -44,6 +46,7 @@ function game({ gameId, playerId }: Props) {
 	});
 	const allPlayers = useQuery(api.player.getPlayers, { gameId });
 	const leaveGameMutation = useMutation(api.game.leaveGame);
+	const startGameMutation = useMutation(api.game.startGame);
 
 	if (!self || !game || !allPlayers || allPlayers?.length < 1) {
 		return <div>not loaded</div>;
@@ -64,6 +67,21 @@ function game({ gameId, playerId }: Props) {
 		}
 	}
 
+	async function startGame() {
+		const { started, message } = await startGameMutation({
+			playerId: playerId,
+			gameId: gameId,
+			settings: settings,
+		});
+
+		if (!started) {
+			toast({
+				title: 'Game not started',
+				description: message,
+			});
+		}
+	}
+
 	function copyGameCode() {
 		navigator.clipboard.writeText(gameId);
 	}
@@ -79,8 +97,18 @@ function game({ gameId, playerId }: Props) {
 				</Button>
 				<span className="grow"></span>
 				<Badge variant={'outline'}>{self?.name}</Badge>
-				{true && <GameSettings settings={settings} setSettings={setSettings}/>}
-				{self.host && <GameSettings settings={settings} setSettings={setSettings}/>}
+				{true && (
+					<GameSettings
+						settings={settings}
+						setSettings={setSettings}
+					/>
+				)}
+				{self.host && (
+					<GameSettings
+						settings={settings}
+						setSettings={setSettings}
+					/>
+				)}
 			</section>
 
 			<div className="grid grid-cols-3 max-w-screen-lg mx-auto">
@@ -116,6 +144,15 @@ function game({ gameId, playerId }: Props) {
 					</CardContent>
 					<Separator className="my-4" />
 					<CardFooter className="flex justify-between gap-2">
+						{self.host && (
+							<Button
+								className="grow"
+								variant={'default'}
+								onClick={startGame}
+							>
+								Start Game
+							</Button>
+						)}
 						<Button
 							className="grow"
 							variant={'destructive'}

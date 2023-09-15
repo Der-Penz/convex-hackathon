@@ -31,9 +31,10 @@ export default defineSchema({
 		team: v.union(
 			v.literal(GAME_TEAMS.RED),
 			v.literal(GAME_TEAMS.BLUE),
-			v.literal(GAME_TEAMS.BLACK)
+			v.literal(GAME_TEAMS.BLACK),
+			v.literal(GAME_TEAMS.GREY),
 		),
 		revealed: v.boolean(),
-		gameID: v.id('games'),
+		gameID: v.id('game'),
 	}),
 });

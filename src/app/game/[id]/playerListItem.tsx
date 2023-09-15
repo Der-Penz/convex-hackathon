@@ -1,9 +1,9 @@
 import { Badge } from '@/components/ui/badge';
 import {
-    Tooltip,
-    TooltipContent,
-    TooltipProvider,
-    TooltipTrigger,
+	Tooltip,
+	TooltipContent,
+	TooltipProvider,
+	TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { Separator } from '@radix-ui/react-select';
 import { BsFilePersonFill } from 'react-icons/bs';
@@ -25,6 +25,9 @@ function playerListItem({ player, self }: Props) {
 						<div className="flex gap-2 cursor-pointer items-center">
 							{player._id === self._id && (
 								<Badge variant={'default'}>You</Badge>
+							)}
+							{player.host && (
+								<Badge variant={'secondary'}>Host</Badge>
 							)}
 							<div className="text-lg font-extralight">
 								{player.name}

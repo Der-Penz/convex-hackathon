@@ -1,7 +1,14 @@
 import { mutation, query } from './_generated/server';
 import { v } from 'convex/values';
 import { generateRandomName } from '../src/lib/constants/name';
-import { GAME_ROLES, GAME_TEAMS } from '../src/lib/constants/game';
+import COLLECTIONS from '../src/lib/ressources/ressources';
+import { shuffleArray } from '../src/lib/utils';
+import {
+	GAME_ROLES,
+	GAME_TEAMS,
+	GAME_WORD_COLLECTIONS,
+} from '../src/lib/constants/game';
+import { Id } from './_generated/dataModel';
 
 export const createGame = mutation({
 	handler: async (ctx) => {
@@ -68,7 +75,11 @@ export const leaveGame = mutation({
 
 export const joinTeam = mutation({
 	args: {
-		team: v.union(v.literal(GAME_TEAMS.RED), v.literal(GAME_TEAMS.BLUE),v.literal(GAME_TEAMS.EMPTY)),
+		team: v.union(
+			v.literal(GAME_TEAMS.RED),
+			v.literal(GAME_TEAMS.BLUE),
+			v.literal(GAME_TEAMS.EMPTY)
+		),
 		role: v.union(
 			v.literal(GAME_ROLES.SPYMASTER),
 			v.literal(GAME_ROLES.OPERATIVE),
@@ -77,7 +88,7 @@ export const joinTeam = mutation({
 		playerId: v.id('player'),
 	},
 	handler: async (ctx, args) => {
-		if (args.role === 'Spectator' ||args.team === '') {
+		if (args.role === 'Spectator' || args.team === '') {
 			await ctx.db.patch(args.playerId, {
 				role: 'Spectator',
 				team: '',
@@ -86,7 +97,7 @@ export const joinTeam = mutation({
 			//check if team has a spymaster
 			const currentPlayer = await ctx.db.get(args.playerId);
 
-			if(!currentPlayer){
+			if (!currentPlayer) {
 				return;
 			}
 
@@ -128,5 +139,153 @@ export const getGame = query({
 	},
 	handler(ctx, args) {
 		return ctx.db.get(args.gameId);
+	},
+});
+
+export const startGame = mutation({
+	args: {
+		gameId: v.id('game'),
+		playerId: v.id('player'),
+		settings: v.object({
+			collection: v.string(),
+			blackCard: v.boolean(),
+			timer: v.boolean(),
+			cardsToGuess: v.number(),
+		}),
+	},
+	async handler(ctx, args) {
+		if (!(await ctx.db.get(args.playerId))?.host) {
+			return {
+				started: false,
+				message: 'Only host can start the game',
+			};
+		}
+
+		const game = await ctx.db.get(args.gameId);
+		if (!game || game.state !== 'lobby') {
+			return {
+				started: false,
+				message: 'Game can not be started',
+			};
+		}
+
+		//check if enough players are available
+		const players = await ctx.db
+			.query('player')
+			.filter((q) => q.eq(q.field('gameId'), args.gameId))
+			.collect();
+
+		if (
+			players.filter((player) => player.role !== 'Spectator').length < 4
+		) {
+			return {
+				started: false,
+				message: 'Not enough players, at least 4 players are necessary',
+			};
+		}
+
+		if (
+			!players.some(
+				(player) =>
+					player.role === 'Spymaster' && player.team === 'Blue'
+			) &&
+			!players.some(
+				(player) => player.role === 'Spymaster' && player.team === 'Red'
+			)
+		) {
+			return {
+				started: false,
+				message: 'Each team needs a spymaster to be able to play',
+			};
+		}
+
+		if (
+			!players.some(
+				(player) =>
+					player.role === 'Operative' && player.team === 'Blue'
+			) &&
+			!players.some(
+				(player) => player.role === 'Operative' && player.team === 'Red'
+			)
+		) {
+			return {
+				started: false,
+				message: 'Each team needs a operative to be able to play',
+			};
+		}
+
+		//get the collection, TODO: instead of getting the first one check for is AI and create one
+		const words = shuffleArray(
+			COLLECTIONS[args.settings.collection as keyof typeof COLLECTIONS] ||
+				COLLECTIONS['English (Original)']
+		).slice(0, 25);
+
+		const eachTeam = args.settings.cardsToGuess;
+		const blackCard = args.settings.blackCard;
+		let count = 0;
+		const inserts: Promise<Id<'word'>>[] = [];
+
+		for (let i = 0; i < eachTeam; i++) {
+			inserts.push(
+				ctx.db.insert('word', {
+					gameID: game._id,
+					revealed: false,
+					word: words[count],
+					team: 'Red',
+				})
+			);
+			inserts.push(
+				ctx.db.insert('word', {
+					gameID: game._id,
+					revealed: false,
+					word: words[count + 1],
+					team: 'Blue',
+				})
+			);
+			count = count + 2;
+		}
+
+		if (blackCard) {
+			inserts.push(
+				ctx.db.insert('word', {
+					gameID: game._id,
+					revealed: false,
+					word: words[count],
+					team: 'Black',
+				})
+			);
+			count = count + 1;
+		}
+
+		while (count < words.length) {
+			inserts.push(
+				ctx.db.insert('word', {
+					gameID: game._id,
+					revealed: false,
+					word: words[count],
+					team: 'Grey',
+				})
+			);
+			count = count + 1;
+		}
+
+		try {
+			await Promise.all(inserts);
+
+			ctx.db.patch(game._id, {
+				state: 'playing',
+			});
+		} catch (error) {
+			ctx.db.delete(game._id);
+			return {
+				started: false,
+				message: 'Error while generating  words',
+			};
+		}
+
+		return {
+			started: true,
+			message: 'Game started',
+		};
 	},
 });

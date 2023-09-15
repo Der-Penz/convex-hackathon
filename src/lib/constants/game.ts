@@ -1,4 +1,4 @@
-import WordCollections from '../ressources/ressources.json';
+import WordCollections from '../ressources/ressources';
 import { WordCollection } from '../types/game';
 
 export const GAME_STATE = {

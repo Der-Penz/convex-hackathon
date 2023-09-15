@@ -5,7 +5,7 @@ export type WordCollection = {
 };
 
 export type GameSettings = {
-	blackCards: boolean,
+	blackCard: boolean,
 	cardsToGuess: number,
 	collection: string,
 	timer: boolean,

@@ -130,11 +130,11 @@ export default function gameSettings({ settings, setSettings }: Props) {
 					<div className="flex gap-2 items-center">
 						<Switch
 							name="black-card"
-							checked={settings.blackCards}
+							checked={settings.blackCard}
 							onCheckedChange={(checked) => {
 								setSettings((prev) => ({
 									...prev,
-									blackCards: checked,
+									blackCard: checked,
 								}));
 							}}
 						/>
