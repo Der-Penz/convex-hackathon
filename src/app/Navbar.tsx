@@ -20,8 +20,20 @@ export function Navbar() {
 			<nav className="container mx-auto flex justify-center gap-4 items-center">
 				<div className="text-xl font-bold">Codenames</div>
 				<span className="grow"></span>
+				<NavigationMenu>
+					<NavigationMenuList>
+						<NavigationMenuItem>
+							<Link href="/create" legacyBehavior passHref>
+								<NavigationMenuLink
+									className={navigationMenuTriggerStyle()}
+								>
+									Create Game
+								</NavigationMenuLink>
+							</Link>
+						</NavigationMenuItem>
+					</NavigationMenuList>
+				</NavigationMenu>
 				<ThemeToggle />
-				<span></span>
 			</nav>
 		</div>
 	);
