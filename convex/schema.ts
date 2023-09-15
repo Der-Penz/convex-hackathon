@@ -1,6 +1,6 @@
 import { defineSchema, defineTable } from 'convex/server';
 import { v } from 'convex/values';
-import { GAME_ROLES, GAME_STATE, GAME_TEAMS } from '../src/lib/types/game';
+import { GAME_ROLES, GAME_STATE, GAME_TEAMS } from '../src/lib/constants/game';
 
 export default defineSchema({
 	game: defineTable({

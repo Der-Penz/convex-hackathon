@@ -17,7 +17,7 @@ import {
     SelectTrigger
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
-import { GAME_ROLES, GAME_TEAMS } from '@/lib/types/game';
+import { GAME_ROLES, GAME_TEAMS } from '@/lib/constants/game';
 import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import { Doc } from '../../../../convex/_generated/dataModel';

@@ -1,3 +1,5 @@
+'use client';
+
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -11,14 +13,16 @@ import {
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import { Id } from '../../../../convex/_generated/dataModel';
-import GameSettings from './gameSettings';
 import TeamCard from './teamCard';
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { Fragment } from 'react';
+import { Fragment, useState } from 'react';
 import PlayerListItem from './playerListItem';
+import GameSettings from './gameSettings';
 import { useRouter } from 'next/navigation';
 import { FaCopy } from 'react-icons/fa';
+import { GameSettings as Settings } from '@/lib/types/game';
+import { GAME_WORD_COLLECTIONS } from '@/lib/constants/game';
 
 type Props = {
 	gameId: Id<'game'>;
@@ -26,6 +30,13 @@ type Props = {
 };
 
 function game({ gameId, playerId }: Props) {
+	const [settings, setSettings] = useState<Settings>({
+		blackCards: true,
+		cardsToGuess: 9,
+		timer: false,
+		collection: GAME_WORD_COLLECTIONS[0].name,
+	});
+
 	const router = useRouter();
 	const self = useQuery(api.player.getPlayer, { playerId });
 	const game = useQuery(api.player.getPlayers, {
@@ -53,7 +64,7 @@ function game({ gameId, playerId }: Props) {
 		}
 	}
 
-	function copyGameCode(){
+	function copyGameCode() {
 		navigator.clipboard.writeText(gameId);
 	}
 
@@ -68,8 +79,8 @@ function game({ gameId, playerId }: Props) {
 				</Button>
 				<span className="grow"></span>
 				<Badge variant={'outline'}>{self?.name}</Badge>
-				{true && <GameSettings />}
-				{self.host && <GameSettings />}
+				{true && <GameSettings settings={settings} setSettings={setSettings}/>}
+				{self.host && <GameSettings settings={settings} setSettings={setSettings}/>}
 			</section>
 
 			<div className="grid grid-cols-3 max-w-screen-lg mx-auto">

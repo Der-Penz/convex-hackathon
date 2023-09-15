@@ -1,7 +1,7 @@
 import { mutation, query } from './_generated/server';
 import { v } from 'convex/values';
-import { generateRandomName } from '../src/lib/types/name';
-import { GAME_ROLES, GAME_TEAMS } from '../src/lib/types/game';
+import { generateRandomName } from '../src/lib/constants/name';
+import { GAME_ROLES, GAME_TEAMS } from '../src/lib/constants/game';
 
 export const createGame = mutation({
 	handler: async (ctx) => {
