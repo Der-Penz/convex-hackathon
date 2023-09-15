@@ -15,6 +15,7 @@ import type {
   FunctionReference,
 } from "convex/server";
 import type * as game from "../game";
+import type * as gameflow from "../gameflow";
 import type * as player from "../player";
 
 /**
@@ -27,6 +28,7 @@ import type * as player from "../player";
  */
 declare const fullApi: ApiFromModules<{
   game: typeof game;
+  gameflow: typeof gameflow;
   player: typeof player;
 }>;
 export declare const api: FilterApi<

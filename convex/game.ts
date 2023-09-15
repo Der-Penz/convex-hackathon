@@ -289,3 +289,30 @@ export const startGame = mutation({
 		};
 	},
 });
+
+export const deleteGame = mutation({
+	args: { gameId: v.id('game') },
+	handler: async (ctx, args) => {
+		const words = await ctx.db
+			.query('word')
+			.filter((q) => q.eq(q.field('gameID'), args.gameId))
+			.collect();
+
+		words.forEach((word) => {
+			ctx.db.delete(word._id);
+		});
+
+		const players = await ctx.db
+			.query('player')
+			.filter((q) => q.eq(q.field('gameId'), args.gameId))
+			.collect();
+
+		players.forEach((player) => {
+			ctx.db.delete(player._id);
+		});
+
+		await ctx.db.delete(args.gameId);
+
+		return true;
+	},
+});
