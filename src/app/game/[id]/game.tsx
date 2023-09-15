@@ -4,6 +4,7 @@ import { useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import { Id } from '../../../../convex/_generated/dataModel';
 import Lobby from './lobby';
+import Playing from './playing';
 
 type Props = {
 	gameId: Id<'game'>;
@@ -26,7 +27,9 @@ function game({ gameId, playerId }: Props) {
 			{game.state === 'lobby' && (
 				<Lobby allPlayers={allPlayers} gameId={gameId} self={self} />
 			)}
-			{game.state === 'playing' && <div>playing</div>}
+			{game.state === 'playing' && (
+				<Playing allPlayers={allPlayers} game={game} self={self} />
+			)}
 			{game.state === 'end' && <div>ended</div>}
 		</div>
 	);

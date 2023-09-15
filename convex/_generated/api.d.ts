@@ -17,6 +17,7 @@ import type {
 import type * as game from "../game";
 import type * as gameflow from "../gameflow";
 import type * as player from "../player";
+import type * as word from "../word";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -30,6 +31,7 @@ declare const fullApi: ApiFromModules<{
   game: typeof game;
   gameflow: typeof gameflow;
   player: typeof player;
+  word: typeof word;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,
