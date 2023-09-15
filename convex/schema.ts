@@ -17,7 +17,7 @@ export default defineSchema({
 	}),
 	player: defineTable({
 		gameId: v.id('game'),
-		team: v.union(v.literal(GAME_TEAMS.RED), v.literal(GAME_TEAMS.BLUE)),
+		team: v.union(v.literal(GAME_TEAMS.RED), v.literal(GAME_TEAMS.BLUE), v.literal('')),
 		role: v.union(
 			v.literal(GAME_ROLES.OPERATIVE),
 			v.literal(GAME_ROLES.SPECTATOR),

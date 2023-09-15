@@ -35,7 +35,7 @@ function teamCard({ color, self, allPlayers }: Props) {
 	const inTeam = self.team === color;
 
 	async function joinTeam() {
-		if (color !== 'Black') {
+		if (color !== 'Black' && color !== 'Grey') {
 			await joinTeamMutation({
 				playerId: self._id,
 				team: color,
@@ -90,8 +90,8 @@ function teamCard({ color, self, allPlayers }: Props) {
 				</ScrollArea>
 
 				{inTeam && (
-					<Select onValueChange={changeRole}>
-						<SelectTrigger>{self.role}</SelectTrigger>
+					<Select onValueChange={changeRole} name={`Role ${color}`}>
+						<SelectTrigger value={self.role}>{self.role}</SelectTrigger>
 						<SelectContent>
 							<SelectGroup>
 								<SelectLabel>Active roles</SelectLabel>

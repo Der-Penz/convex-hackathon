@@ -8,6 +8,8 @@ export const GAME_TEAMS = {
 	RED: 'Red',
 	BLUE: 'Blue',
 	BLACK: 'Black',
+	GREY: 'Grey',
+	EMPTY: '',
 } as const;
 export const GAME_ROLES = {
 	SPYMASTER: 'Spymaster',

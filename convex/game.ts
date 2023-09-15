@@ -46,7 +46,7 @@ export const joinGame = mutation({
 			gameId: args.joinId,
 			name: name,
 			role: 'Spectator',
-			team: Math.random() >= 0.5 ? 'Red' : 'Blue',
+			team: '',
 			host: isHost,
 		});
 		return { name: name, gameID: args.joinId, playerId: newPlayerId };
@@ -68,7 +68,7 @@ export const leaveGame = mutation({
 
 export const joinTeam = mutation({
 	args: {
-		team: v.union(v.literal(GAME_TEAMS.RED), v.literal(GAME_TEAMS.BLUE)),
+		team: v.union(v.literal(GAME_TEAMS.RED), v.literal(GAME_TEAMS.BLUE),v.literal(GAME_TEAMS.EMPTY)),
 		role: v.union(
 			v.literal(GAME_ROLES.SPYMASTER),
 			v.literal(GAME_ROLES.OPERATIVE),
@@ -77,10 +77,39 @@ export const joinTeam = mutation({
 		playerId: v.id('player'),
 	},
 	handler: async (ctx, args) => {
-		if (args.role === 'Spectator') {
+		if (args.role === 'Spectator' ||args.team === '') {
 			await ctx.db.patch(args.playerId, {
 				role: 'Spectator',
+				team: '',
 			});
+		} else if (args.role === 'Spymaster') {
+			//check if team has a spymaster
+			const currentPlayer = await ctx.db.get(args.playerId);
+
+			if(!currentPlayer){
+				return;
+			}
+
+			const playerInTeam = await ctx.db
+				.query('player')
+				.filter((q) =>
+					q.and(
+						q.eq(q.field('gameId'), currentPlayer.gameId),
+						q.eq(q.field('team'), args.team)
+					)
+				)
+				.collect();
+
+			if (!playerInTeam.some((player) => player.role === 'Spymaster')) {
+				await ctx.db.patch(args.playerId, {
+					role: args.role,
+					team: args.team,
+				});
+			} else {
+				await ctx.db.patch(args.playerId, {
+					team: args.team,
+				});
+			}
 		} else {
 			await ctx.db.patch(args.playerId, {
 				role: args.role,
