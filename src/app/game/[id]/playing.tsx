@@ -6,6 +6,7 @@ import Board from './board';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import TitleMessage from './titleMessage';
 
 type Props = {
 	self: Doc<'player'>;
@@ -30,6 +31,8 @@ function playing({ self, allPlayers, game }: Props) {
 		<div>
 			<section className="flex gap-2 p-2 border-b-2 items-center">
 				<span>gameBoard {self.role}</span>
+				<span className="grow"></span>
+				<TitleMessage self={self} game={game} />
 				<span className="grow"></span>
 				<Badge variant={'outline'}>{self?.name}</Badge>
 				<Button variant={'destructive'} onClick={leaveGame}>
