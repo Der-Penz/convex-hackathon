@@ -42,7 +42,6 @@ function lobby({ self, allPlayers, gameId }: Props) {
 	const { toast } = useToast();
 	const router = useRouter();
 	const leaveGameMutation = useMutation(api.game.leaveGame);
-	const deleteGameMutation = useMutation(api.game.deleteGame);
 	const startGameMutation = useMutation(api.game.startGame);
 
 	const spectators = allPlayers.filter(
@@ -53,16 +52,9 @@ function lobby({ self, allPlayers, gameId }: Props) {
 	);
 
 	async function leaveGame() {
-		if (self.host) {
-			const deleted = await deleteGameMutation({ gameId: gameId });
-			if (deleted) {
-				router.push('/');
-			}
-		} else {
-			const left = await leaveGameMutation({ playerId: self._id });
-			if (left.deleted) {
-				router.push('/');
-			}
+		const left = await leaveGameMutation({ playerId: self._id });
+		if (left.deleted) {
+			router.push('/');
 		}
 	}
 
@@ -87,7 +79,7 @@ function lobby({ self, allPlayers, gameId }: Props) {
 
 	return (
 		<>
-			<section className="flex gap-2 p-4 border-b-2 items-center">
+			<section className="flex gap-2 p-2 border-b-2 items-center">
 				<h3 className="text-xl">
 					Game: <span className="font-extralight">{gameId}</span>
 				</h3>

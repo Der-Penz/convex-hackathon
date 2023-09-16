@@ -9,7 +9,18 @@ export default defineSchema({
 			v.literal(GAME_STATE.PLAYING),
 			v.literal(GAME_STATE.END)
 		),
-		spymaster_word: v.string(),
+		clue: v.union(
+			v.object({
+				word: v.string(),
+				markedCards: v.number(),
+			}),
+			v.null()
+		),
+		guessThisRound: v.number(),
+		activeRole: v.union(
+			v.literal(GAME_ROLES.SPYMASTER),
+			v.literal(GAME_ROLES.OPERATIVE)
+		),
 		currentTeam: v.union(
 			v.literal(GAME_TEAMS.RED),
 			v.literal(GAME_TEAMS.BLUE)
@@ -17,7 +28,11 @@ export default defineSchema({
 	}),
 	player: defineTable({
 		gameId: v.id('game'),
-		team: v.union(v.literal(GAME_TEAMS.RED), v.literal(GAME_TEAMS.BLUE), v.literal('')),
+		team: v.union(
+			v.literal(GAME_TEAMS.RED),
+			v.literal(GAME_TEAMS.BLUE),
+			v.literal('')
+		),
 		role: v.union(
 			v.literal(GAME_ROLES.OPERATIVE),
 			v.literal(GAME_ROLES.SPECTATOR),
@@ -32,9 +47,12 @@ export default defineSchema({
 			v.literal(GAME_TEAMS.RED),
 			v.literal(GAME_TEAMS.BLUE),
 			v.literal(GAME_TEAMS.BLACK),
-			v.literal(GAME_TEAMS.GREY),
+			v.literal(GAME_TEAMS.GREY)
 		),
 		revealed: v.boolean(),
 		gameID: v.id('game'),
+	}),
+	gameFlow: defineTable({
+		message: v.string(),
 	}),
 });

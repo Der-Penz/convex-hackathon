@@ -7,6 +7,7 @@ import TeamCard from './teamCard';
 import { api } from '../../../../convex/_generated/api';
 import { Id } from '../../../../convex/_generated/dataModel';
 import Game from './game';
+import GameLoading from '@/components/loading/gameLoading';
 
 type Props = {
 	params: { id: string };
@@ -54,7 +55,7 @@ export default function Page({ params: { id }, searchParams }: Props) {
 	}, []);
 
 	if (!gameId || !playerId) {
-		return <div>Joining game</div>;
+		return <GameLoading message="Joining game" />;
 	}
 
 	return <Game gameId={gameId} playerId={playerId} />;

@@ -1,22 +1,25 @@
 import React from 'react';
 import { Doc } from '../../../../convex/_generated/dataModel';
-import { GAME_ROLES, GAME_TEAMS } from '@/lib/constants/game';
 import Image from 'next/image';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
+import { Separator } from '@/components/ui/separator';
 
 type Props = {
 	spymaster: boolean;
 	word: Doc<'word'>;
+	onClick: (word: Doc<'word'>) => void;
 };
 
-function Card({ spymaster, word }: Props) {
+function Card({ spymaster, word, onClick }: Props) {
 	return (
 		<AspectRatio
+			onClick={() => onClick(word)}
 			ratio={16 / 10}
-			className="bg-muted relative overflow-hidden rounded-md grid place-items-center"
+			className="bg-muted relative overflow-hidden rounded-md grid place-items-center select-none p-2 shadow-xl border-4 border-muted-foreground"
 		>
-			<p className="relative z-10 text-lg font-bold">
-				{(word.revealed || spymaster) && <p>{word.word}</p>}
+			<Separator className="my-4" />
+			<p className="relative z-10 text-lg font-bold w-full bg-white/70 text-black text-center">
+				<p>{word.word}</p>
 			</p>
 
 			<Image
@@ -25,7 +28,8 @@ function Card({ spymaster, word }: Props) {
 				fill
 				className="absolute inset-0"
 			/>
-			{word.revealed && (
+
+			{word.revealed || spymaster ? (
 				<div
 					className={`${
 						word.team === 'Red'
@@ -34,9 +38,11 @@ function Card({ spymaster, word }: Props) {
 							? 'bg-blue-500'
 							: word.team === 'Black'
 							? 'bg-black'
-							: 'bg-gray-500'
+							: 'bg-gray-300'
 					} absolute inset-0 opacity-60`}
 				/>
+			) : (
+				<div className="bg-amber-950 mix-blend-hard-light absolute inset-0" />
 			)}
 		</AspectRatio>
 	);

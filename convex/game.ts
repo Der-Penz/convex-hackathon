@@ -1,13 +1,10 @@
-import { mutation, query } from './_generated/server';
+import { internalMutation, mutation, query } from './_generated/server';
 import { v } from 'convex/values';
+import { internal } from './_generated/api';
 import { generateRandomName } from '../src/lib/constants/name';
 import COLLECTIONS from '../src/lib/ressources/ressources';
 import { shuffleArray } from '../src/lib/utils';
-import {
-	GAME_ROLES,
-	GAME_TEAMS,
-	GAME_WORD_COLLECTIONS,
-} from '../src/lib/constants/game';
+import { GAME_ROLES, GAME_TEAMS } from '../src/lib/constants/game';
 import { Id } from './_generated/dataModel';
 
 export const createGame = mutation({
@@ -15,7 +12,9 @@ export const createGame = mutation({
 		const newGameId = await ctx.db.insert('game', {
 			state: 'lobby',
 			currentTeam: 'Red',
-			spymaster_word: '',
+			activeRole: 'Spymaster',
+			clue: null,
+			guessThisRound: 0,
 		});
 		return { joinId: newGameId };
 	},
@@ -81,7 +80,15 @@ export const leaveGame = mutation({
 	args: { playerId: v.id('player') },
 	handler: async (ctx, args) => {
 		try {
-			await ctx.db.delete(args.playerId);
+			const player = await ctx.db.get(args.playerId);
+
+			if (player?.host) {
+				await ctx.scheduler.runAfter(0, internal.game.deleteGame, {
+					gameId: player.gameId,
+				});
+			} else {
+				await ctx.db.delete(args.playerId);
+			}
 
 			return { deleted: true };
 		} catch (err) {
@@ -187,49 +194,49 @@ export const startGame = mutation({
 		}
 
 		//check if enough players are available
-		const players = await ctx.db
-			.query('player')
-			.filter((q) => q.eq(q.field('gameId'), args.gameId))
-			.collect();
+		// const players = await ctx.db
+		// 	.query('player')
+		// 	.filter((q) => q.eq(q.field('gameId'), args.gameId))
+		// 	.collect();
 
-		if (
-			players.filter((player) => player.role !== 'Spectator').length < 4
-		) {
-			return {
-				started: false,
-				message: 'Not enough players, at least 4 players are necessary',
-			};
-		}
+		// if (
+		// 	players.filter((player) => player.role !== 'Spectator').length < 4
+		// ) {
+		// 	return {
+		// 		started: false,
+		// 		message: 'Not enough players, at least 4 players are necessary',
+		// 	};
+		// }
 
-		if (
-			!players.some(
-				(player) =>
-					player.role === 'Spymaster' && player.team === 'Blue'
-			) &&
-			!players.some(
-				(player) => player.role === 'Spymaster' && player.team === 'Red'
-			)
-		) {
-			return {
-				started: false,
-				message: 'Each team needs a spymaster to be able to play',
-			};
-		}
+		// if (
+		// 	!players.some(
+		// 		(player) =>
+		// 			player.role === 'Spymaster' && player.team === 'Blue'
+		// 	) &&
+		// 	!players.some(
+		// 		(player) => player.role === 'Spymaster' && player.team === 'Red'
+		// 	)
+		// ) {
+		// 	return {
+		// 		started: false,
+		// 		message: 'Each team needs a spymaster to be able to play',
+		// 	};
+		// }
 
-		if (
-			!players.some(
-				(player) =>
-					player.role === 'Operative' && player.team === 'Blue'
-			) &&
-			!players.some(
-				(player) => player.role === 'Operative' && player.team === 'Red'
-			)
-		) {
-			return {
-				started: false,
-				message: 'Each team needs a operative to be able to play',
-			};
-		}
+		// if (
+		// 	!players.some(
+		// 		(player) =>
+		// 			player.role === 'Operative' && player.team === 'Blue'
+		// 	) &&
+		// 	!players.some(
+		// 		(player) => player.role === 'Operative' && player.team === 'Red'
+		// 	)
+		// ) {
+		// 	return {
+		// 		started: false,
+		// 		message: 'Each team needs a operative to be able to play',
+		// 	};
+		// }
 
 		//get the collection, TODO: instead of getting the first one check for is AI and create one
 		const words = shuffleArray(
@@ -307,7 +314,7 @@ export const startGame = mutation({
 	},
 });
 
-export const deleteGame = mutation({
+export const deleteGame = internalMutation({
 	args: { gameId: v.id('game') },
 	handler: async (ctx, args) => {
 		const words = await ctx.db

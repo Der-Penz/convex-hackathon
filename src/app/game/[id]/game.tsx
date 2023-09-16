@@ -5,6 +5,9 @@ import { api } from '../../../../convex/_generated/api';
 import { Id } from '../../../../convex/_generated/dataModel';
 import Lobby from './lobby';
 import Playing from './playing';
+import { Skeleton } from '@/components/ui/skeleton';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
+import GameLoading from '@/components/loading/gameLoading';
 
 type Props = {
 	gameId: Id<'game'>;
@@ -19,7 +22,9 @@ function game({ gameId, playerId }: Props) {
 	const allPlayers = useQuery(api.player.getPlayers, { gameId });
 
 	if (!self || !game || !allPlayers || allPlayers?.length < 1) {
-		return <div>not loaded</div>;
+		return (
+			<GameLoading message='Loading game'/>
+		);
 	}
 
 	return (
