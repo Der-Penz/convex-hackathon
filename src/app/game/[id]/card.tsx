@@ -14,7 +14,7 @@ function Card({ spymaster, word, onClick }: Props) {
 	return (
 		<AspectRatio
 			onClick={() => onClick(word)}
-			ratio={16 / 10}
+			ratio={16 / 9}
 			className="bg-muted relative overflow-hidden rounded-md grid place-items-center select-none p-2 shadow-xl border-4 border-muted-foreground"
 		>
 			<Separator className="my-4" />

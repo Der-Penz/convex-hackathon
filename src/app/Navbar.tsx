@@ -17,7 +17,7 @@ import ThemeToggle from '@/components/themeToggle';
 export function Navbar() {
 	return (
 		<div className="border-b py-4">
-			<nav className="container mx-auto flex justify-center gap-4 items-center">
+			<nav className="container flex justify-center gap-4 items-center">
 				<div className="text-xl font-bold">Codenames</div>
 				<span className="grow"></span>
 				<NavigationMenu>

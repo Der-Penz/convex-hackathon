@@ -7,6 +7,7 @@ import { useMutation } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
 
 type Props = {
 	self: Doc<'player'>;
@@ -47,8 +48,8 @@ function board({ self, words, game }: Props) {
 	}
 
 	return (
-		<>
-			<div className="grid grid-cols-5 gap-2 p-2 w-10/12">
+		<div>
+			<div className="grid grid-cols-5 gap-2">
 				{words.map((word) => (
 					<Card
 						word={word}
@@ -80,7 +81,15 @@ function board({ self, words, game }: Props) {
 					</Button>
 				</div>
 			)}
-		</>
+			{self.role !== 'Spymaster' ||
+				(!active && game.clue && (
+					<div className="flex items-center gap-3 text-2xl border-4 px-4 py-1 rounded-lg shadow-lg">
+						<div className='font-extralight'>{game.clue.word}</div>
+						<Separator orientation="vertical" className='h-8'/>
+						<div className='font-extrabold'>{game.clue.markedCards}</div>
+					</div>
+				))}
+		</div>
 	);
 }
 

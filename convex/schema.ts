@@ -52,7 +52,8 @@ export default defineSchema({
 		revealed: v.boolean(),
 		gameID: v.id('game'),
 	}),
-	gameFlow: defineTable({
+	gameLog: defineTable({
 		message: v.string(),
+		gameId: v.id('game'),
 	}),
 });

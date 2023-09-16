@@ -112,6 +112,17 @@ export const joinTeam = mutation({
 		playerId: v.id('player'),
 	},
 	handler: async (ctx, args) => {
+		const player = await ctx.db.get(args.playerId);
+
+		if (!player) {
+			return;
+		}
+		const game = await ctx.db.get(player.gameId);
+
+		if (!game || game.state !== 'lobby') {
+			return;
+		}
+
 		if (args.role === 'Spectator' || args.team === '') {
 			await ctx.db.patch(args.playerId, {
 				role: 'Spectator',
