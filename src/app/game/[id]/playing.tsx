@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Doc } from '../../../../convex/_generated/dataModel';
 import { useMutation, useQuery } from 'convex/react';
 import { api } from '../../../../convex/_generated/api';
@@ -19,6 +19,7 @@ import {
 import GameLoading from '@/components/loading/gameLoading';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
+import IngameTeamCard from './ingameTeamCard';
 
 type Props = {
 	self: Doc<'player'>;
@@ -42,6 +43,18 @@ function playing({ self, allPlayers, game }: Props) {
 	function copyGameCode() {
 		navigator.clipboard.writeText(game._id);
 	}
+
+	const teamPlayers = useMemo(
+		() => allPlayers.filter((player) => player.team === self.team),
+		[allPlayers]
+	);
+	const oppositePlayers = useMemo(
+		() =>
+			allPlayers.filter(
+				(player) => player.team !== self.team && player.team !== ''
+			),
+		[allPlayers]
+	);
 
 	if (!words) {
 		return <GameLoading message="Loading cards" />;
@@ -70,59 +83,32 @@ function playing({ self, allPlayers, game }: Props) {
 				</section>
 			</div>
 
-			<section className="flex max-w-8xl gap-1 m-2">
-				<div>
-					<Card className="">
-						<CardHeader>
-							<CardTitle>Red Team</CardTitle>
-							<CardDescription>
-								Words left:{' '}
-								{
-									words.filter(
-										(word) =>
-											word.team === 'Red' &&
-											!word.revealed
-									).length
-								}
-							</CardDescription>
-						</CardHeader>
-						<CardContent>
-							<h4 className="mb-2 text-sm font-medium leading-none">
-								Spymaster:{' '}
-								{
-									allPlayers.find(
-										(player) =>
-											player.role === 'Spymaster' &&
-											player.team === 'Red'
-									)?.name
-								}
-							</h4>
-							<ScrollArea className="max-h-28 rounded-md border">
-								<div className="p-2">
-									<h4 className="mb-2 text-sm font-medium leading-none">
-										Operatives:
-									</h4>
-									{allPlayers
-										.filter(
-											(player) =>
-												player.team === 'Red' &&
-												player.role === 'Operative'
-										)
-										.map((player) => (
-											<>
-												<div
-													key={player._id}
-													className="text-sm"
-												>
-													{player.name}
-												</div>
-												<Separator className="my-2" />
-											</>
-										))}
-								</div>
-							</ScrollArea>
-						</CardContent>
-					</Card>
+			<section className="flex max-w-8xl gap-2 m-2">
+				<div className="flex flex-col gap-2 w-[20%]">
+					<IngameTeamCard
+						color={'Red'}
+						wordsLeft={
+							words.filter(
+								(word) => word.team === 'Red' && !word.revealed
+							).length
+						}
+						players={
+							self.team === 'Red' ? teamPlayers : oppositePlayers
+						}
+						active={game.currentTeam === 'Red'}
+					/>
+					<IngameTeamCard
+						color="Blue"
+						wordsLeft={
+							words.filter(
+								(word) => word.team === 'Blue' && !word.revealed
+							).length
+						}
+						players={
+							self.team === 'Blue' ? teamPlayers : oppositePlayers
+						}
+						active={game.currentTeam === 'Blue'}
+					/>
 				</div>
 				<div className="grow">
 					<Board words={words} self={self} game={game} />

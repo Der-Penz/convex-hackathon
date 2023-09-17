@@ -22,7 +22,7 @@ function calculateMessage(game: Doc<'game'>, self: Doc<'player'>) {
 	//your team
 	if (game.currentTeam === self.team) {
 		if (activeRole && self.role === 'Spymaster') {
-			return 'Give your operative a clue.';
+			return 'Give your operatives a clue.';
 		}
 		if (activeRole && self.role === 'Operative') {
 			return 'Try to guess a word.';

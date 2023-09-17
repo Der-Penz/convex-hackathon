@@ -59,36 +59,40 @@ function board({ self, words, game }: Props) {
 				))}
 			</div>
 			{self.role === 'Spymaster' && active && (
-				<div className="flex gap-2">
+				<div className="flex gap-2 mt-2 justify-center">
 					<Input
-						placeholder="guess"
+						placeholder="clue..."
+						className="w-40"
 						type="text"
 						value={clue}
 						onChange={(e) => setClue(e.target.value)}
 					/>
 					<Input
 						type="number"
+						className="w-20"
 						min={1}
-						max={100}
+						max={10}
 						value={markedCards}
 						onChange={(e) => setMarkedCards(e.target.valueAsNumber)}
 					/>
 					<Button
 						disabled={!clue || markedCards < 1}
 						onClick={giveClue}
+						className="w-40"
 					>
 						Give clue
 					</Button>
 				</div>
 			)}
-			{self.role !== 'Spymaster' ||
-				(!active && game.clue && (
-					<div className="flex items-center gap-3 text-2xl border-4 px-4 py-1 rounded-lg shadow-lg">
-						<div className='font-extralight'>{game.clue.word}</div>
-						<Separator orientation="vertical" className='h-8'/>
-						<div className='font-extrabold'>{game.clue.markedCards}</div>
+			{game.clue && (
+				<div className="flex justify-center w-max mx-auto gap-3 text-2xl border-4 px-4 py-1 mt-2 rounded-lg shadow-lg">
+					<div className="font-extralight">{game.clue.word}</div>
+					<Separator orientation="vertical" className="h-8" />
+					<div className="font-extrabold">
+						{game.clue.markedCards}
 					</div>
-				))}
+				</div>
+			)}
 		</div>
 	);
 }
