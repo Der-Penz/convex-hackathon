@@ -5,13 +5,11 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { Input } from '@/components/ui/input';
 import { ChangeEvent, useState } from 'react';
+import { Separator } from '@/components/ui/separator';
 
 export default function Home() {
 	const [joinCode, setJoinCode] = useState('');
-
-	const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-		setJoinCode(event.target.value);
-	};
+	const [name, setName] = useState('');
 
 	return (
 		<main className="my-5 px-5 w-full flex items-center flex-col">
@@ -22,22 +20,31 @@ export default function Home() {
 				<p>Create a game and play with your friends online</p>
 				<p>No account needed!</p>
 			</div>
-			<div className="flex gap-4 flex-col w-max">
-				<Button variant={'outline'} className="font-extrabold text-3xl">
+			<div className="flex gap-4 flex-col w-full max-w-sm">
+				<Button variant={'outline'} className="text-3xl">
 					<Link href={`/create`}>Create Room</Link>
 				</Button>
-				<div className="flex gap-2">
+				<Separator />
+				<div className="flex gap-2 flex-col">
 					<Input
 						type="text"
 						placeholder="Join code"
 						value={joinCode}
-						onChange={handleChange}
+						onChange={(e) => setJoinCode(e.target.value)}
+					/>
+					<Input
+						type="text"
+						placeholder="Name"
+						value={name}
+						onChange={(e) => setName(e.target.value)}
 					/>
 					<Button
 						variant={'outline'}
-						className="font-extrabold text-3xl w-full"
+						className=" text-3xl w-full"
 					>
-						<Link href={`/game/${joinCode}`}>Join Room</Link>
+						<Link href={`/game/${joinCode}?name=${name}`}>
+							Join Room
+						</Link>
 					</Button>
 				</div>
 			</div>

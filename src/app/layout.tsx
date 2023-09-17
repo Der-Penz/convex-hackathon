@@ -29,7 +29,7 @@ export default function RootLayout({
 					enableSystem
 				>
 					<ConvexClientProvider>
-						<div className="w-full h-[100vh] flex flex-col">
+						<div className="w-full h-[100vh] flex flex-col bg-image">
 							<Navbar />
 							<div className="grow">{children}</div>
 						</div>
