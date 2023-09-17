@@ -46,6 +46,12 @@ export const giveClue = mutation({
 			guessThisRound: 0,
 		});
 
+		await ctx.db.insert('gameLog', {
+			gameId: game._id,
+			message: `${player.name} gave clue: ${args.clue} | ${args.markedCards}`,
+			team: game.currentTeam,
+		});
+
 		return {
 			executed: true,
 			message: "Operative's turn",
@@ -107,6 +113,12 @@ export const guessWord = mutation({
 		});
 		await ctx.db.patch(game._id, {
 			guessThisRound: game.guessThisRound + 1,
+		});
+
+		await ctx.db.insert('gameLog', {
+			gameId: game._id,
+			message: `${player.name} guessed: ${word.word}`,
+			team: game.currentTeam,
 		});
 
 		ctx.scheduler.runAfter(0, internal.gameflow.checkRound, {

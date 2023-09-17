@@ -16,6 +16,7 @@ import type {
 } from "convex/server";
 import type * as game from "../game";
 import type * as gameflow from "../gameflow";
+import type * as gameLog from "../gameLog";
 import type * as player from "../player";
 import type * as word from "../word";
 
@@ -30,6 +31,7 @@ import type * as word from "../word";
 declare const fullApi: ApiFromModules<{
   game: typeof game;
   gameflow: typeof gameflow;
+  gameLog: typeof gameLog;
   player: typeof player;
   word: typeof word;
 }>;

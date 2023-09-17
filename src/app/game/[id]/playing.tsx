@@ -20,6 +20,7 @@ import GameLoading from '@/components/loading/gameLoading';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Separator } from '@/components/ui/separator';
 import IngameTeamCard from './ingameTeamCard';
+import GameLog from './gameLog';
 
 type Props = {
 	self: Doc<'player'>;
@@ -84,7 +85,7 @@ function playing({ self, allPlayers, game }: Props) {
 			</div>
 
 			<section className="flex max-w-8xl gap-2 m-2">
-				<div className="flex flex-col gap-2 w-[20%]">
+				<div className="flex flex-col gap-2 w-[15%]">
 					<IngameTeamCard
 						color={'Red'}
 						wordsLeft={
@@ -113,6 +114,7 @@ function playing({ self, allPlayers, game }: Props) {
 				<div className="grow">
 					<Board words={words} self={self} game={game} />
 				</div>
+				<GameLog gameId={game._id}/>
 			</section>
 		</div>
 	);

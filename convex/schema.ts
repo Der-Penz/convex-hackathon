@@ -55,5 +55,10 @@ export default defineSchema({
 	gameLog: defineTable({
 		message: v.string(),
 		gameId: v.id('game'),
+		team: v.union(
+			v.literal(GAME_TEAMS.RED),
+			v.literal(GAME_TEAMS.BLUE),
+			v.literal(GAME_TEAMS.GREY)
+		),
 	}),
 });
