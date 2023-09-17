@@ -23,6 +23,15 @@ export function Navbar() {
 				<NavigationMenu>
 					<NavigationMenuList>
 						<NavigationMenuItem>
+							<Link href="/rules" legacyBehavior passHref>
+								<NavigationMenuLink
+									className={navigationMenuTriggerStyle()}
+								>
+									Rules
+								</NavigationMenuLink>
+							</Link>
+						</NavigationMenuItem>
+						<NavigationMenuItem>
 							<Link href="/create" legacyBehavior passHref>
 								<NavigationMenuLink
 									className={navigationMenuTriggerStyle()}

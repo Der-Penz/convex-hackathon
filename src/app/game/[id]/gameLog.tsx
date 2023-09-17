@@ -1,3 +1,5 @@
+'use client';
+
 import { ScrollArea } from '@/components/ui/scroll-area';
 import React, { Fragment } from 'react';
 import { Id } from '../../../../convex/_generated/dataModel';

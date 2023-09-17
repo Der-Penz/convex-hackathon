@@ -1,3 +1,5 @@
+'use client';
+
 import React, { useMemo } from 'react';
 import { Doc } from '../../../../convex/_generated/dataModel';
 import { useMutation, useQuery } from 'convex/react';
