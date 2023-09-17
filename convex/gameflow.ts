@@ -1,6 +1,6 @@
 import { v } from 'convex/values';
 import { internalMutation, mutation } from './_generated/server';
-import { api, internal } from './_generated/api';
+import { internal } from './_generated/api';
 
 export const giveClue = mutation({
 	args: {
@@ -9,8 +9,6 @@ export const giveClue = mutation({
 		markedCards: v.number(),
 	},
 	async handler(ctx, args) {
-		console.log('incoming clue');
-
 		const player = await ctx.db.get(args.playerId);
 
 		if (!player || player.role !== 'Spymaster') {
@@ -161,8 +159,24 @@ export const checkRound = internalMutation({
 			return;
 		}
 
-		//next team when all guesses used
-		if (game.clue && game.guessThisRound >= game.clue?.markedCards) {
+		//next team on opposite team card
+		if (
+			word.revealed &&
+			word.team !== 'Black' &&
+			word.team !== 'Grey' &&
+			word.team !== game.currentTeam
+		) {
+			await ctx.db.patch(args.gameId, {
+				activeRole: 'Spymaster',
+				currentTeam: game.currentTeam === 'Blue' ? 'Red' : 'Blue',
+				clue: null,
+				guessThisRound: 0,
+			});
+
+			return;
+		}
+		if (game.clue && game.guessThisRound >= game.clue?.markedCards + 1) {
+			//next team when all guesses used
 			await ctx.db.patch(args.gameId, {
 				activeRole: 'Spymaster',
 				currentTeam: game.currentTeam === 'Blue' ? 'Red' : 'Blue',

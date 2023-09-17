@@ -8,6 +8,7 @@ import {
 	HoverCardTrigger,
 } from '@/components/ui/hover-card';
 import { Label } from '@/components/ui/label';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
 	Select,
@@ -30,7 +31,7 @@ import {
 } from '@/components/ui/sheet';
 import { Slider } from '@/components/ui/slider';
 import { Switch } from '@/components/ui/switch';
-import { GAME_WORD_COLLECTIONS } from '@/lib/constants/game';
+import { GAME_TEAMS, GAME_WORD_COLLECTIONS } from '@/lib/constants/game';
 import { GameSettings } from '@/lib/types/game';
 import { Dispatch, SetStateAction } from 'react';
 import { MdSettings } from 'react-icons/md';
@@ -153,6 +154,34 @@ export default function gameSettings({ settings, setSettings }: Props) {
 							}}
 						/>
 						<Label htmlFor="timer">Timer</Label>
+					</div>
+
+					<div className="flex gap-2 items-start flex-col">
+					<Label>Starting team</Label>
+						<RadioGroup
+							value={settings.startingTeam}
+							onValueChange={(value) => {
+								setSettings((prev) => ({
+									...prev,
+									startingTeam: value as 'Red' | 'Blue',
+								}));
+							}}
+						>
+							<div className="flex items-center space-x-2">
+								<RadioGroupItem
+									value={GAME_TEAMS.RED}
+									id="r1"
+								/>
+								<Label htmlFor="r1">{GAME_TEAMS.RED}</Label>
+							</div>
+							<div className="flex items-center space-x-2">
+								<RadioGroupItem
+									value={GAME_TEAMS.BLUE}
+									id="r2"
+								/>
+								<Label htmlFor="r2">{GAME_TEAMS.BLUE}</Label>
+							</div>
+						</RadioGroup>
 					</div>
 
 					<div className="flex gap-2 items-stretch flex-col">

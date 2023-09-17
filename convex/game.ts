@@ -186,6 +186,10 @@ export const startGame = mutation({
 			blackCard: v.boolean(),
 			timer: v.boolean(),
 			cardsToGuess: v.number(),
+			startingTeam: v.union(
+				v.literal(GAME_TEAMS.RED),
+				v.literal(GAME_TEAMS.BLUE)
+			),
 		}),
 	},
 	async handler(ctx, args) {
@@ -260,6 +264,16 @@ export const startGame = mutation({
 		let count = 0;
 		const inserts: Promise<Id<'word'>>[] = [];
 
+		inserts.push(
+			ctx.db.insert('word', {
+				gameID: game._id,
+				revealed: false,
+				word: words[count],
+				team: args.settings.startingTeam,
+			})
+		);
+		count++;
+
 		for (let i = 0; i < eachTeam; i++) {
 			inserts.push(
 				ctx.db.insert('word', {
@@ -309,6 +323,7 @@ export const startGame = mutation({
 
 			ctx.db.patch(game._id, {
 				state: 'playing',
+				currentTeam: args.settings.startingTeam,
 			});
 		} catch (error) {
 			ctx.db.delete(game._id);

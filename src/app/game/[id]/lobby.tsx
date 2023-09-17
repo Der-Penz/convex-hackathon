@@ -37,6 +37,7 @@ function lobby({ self, allPlayers, gameId }: Props) {
 		cardsToGuess: 9,
 		timer: false,
 		collection: GAME_WORD_COLLECTIONS[0].name,
+		startingTeam: 'Red',
 	});
 
 	const { toast } = useToast();

@@ -9,4 +9,5 @@ export type GameSettings = {
 	cardsToGuess: number,
 	collection: string,
 	timer: boolean,
+	startingTeam: 'Red' | 'Blue',
 }
