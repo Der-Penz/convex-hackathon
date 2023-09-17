@@ -47,6 +47,7 @@ export default function Page({ params: { id }, searchParams }: Props) {
 				//save the player id for refreshing
 				sessionStorage.setItem('session', joinedGame.playerId);
 			} catch {
+				sessionStorage.removeItem('session');
 				router.push(`/`);
 			}
 		}

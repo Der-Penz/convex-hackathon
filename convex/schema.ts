@@ -25,6 +25,11 @@ export default defineSchema({
 			v.literal(GAME_TEAMS.RED),
 			v.literal(GAME_TEAMS.BLUE)
 		),
+		winner: v.union(
+			v.literal(GAME_TEAMS.RED),
+			v.literal(GAME_TEAMS.BLUE),
+			v.null()
+		),
 	}),
 	player: defineTable({
 		gameId: v.id('game'),
@@ -39,6 +44,7 @@ export default defineSchema({
 			v.literal(GAME_ROLES.SPYMASTER)
 		),
 		name: v.string(),
+		type: v.union(v.literal('AI'), v.literal('Player')),
 		host: v.boolean(),
 	}),
 	word: defineTable({

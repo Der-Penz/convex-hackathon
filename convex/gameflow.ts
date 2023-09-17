@@ -1,5 +1,5 @@
 import { v } from 'convex/values';
-import { internalMutation, mutation } from './_generated/server';
+import { internalAction, internalMutation, mutation } from './_generated/server';
 import { internal } from './_generated/api';
 
 export const giveClue = mutation({
@@ -148,8 +148,73 @@ export const checkRound = internalMutation({
 
 		//game over on black card
 		if (word.revealed && word.team === 'Black') {
+			const winner = game.currentTeam === 'Blue' ? 'Red' : 'Blue';
 			await ctx.db.patch(args.gameId, {
 				state: 'end',
+				winner,
+			});
+
+			await ctx.db.insert('gameLog', {
+				gameId: game._id,
+				message: `${winner} won the game by black card`,
+				team: 'Grey',
+			});
+
+			ctx.scheduler.runAfter(1000 * 60, internal.game.deleteGame, {
+				gameId: game._id,
+			});
+
+			return;
+		}
+
+		const words = await ctx.db
+			.query('word')
+			.filter((q) => q.eq(q.field('gameID'), game._id))
+			.take(25);
+
+		//red won?
+		if (
+			words
+				.filter((word) => word.team === 'Red')
+				.every((word) => word.revealed)
+		) {
+			await ctx.db.patch(args.gameId, {
+				clue: null,
+				guessThisRound: 0,
+				state: 'end',
+				winner: 'Red',
+			});
+
+			await ctx.db.insert('gameLog', {
+				gameId: game._id,
+				message: `Red won the game.`,
+				team: 'Grey',
+			});
+
+			ctx.scheduler.runAfter(1000 * 60, internal.game.deleteGame, {
+				gameId: game._id,
+			});
+
+			return;
+		}
+
+		//blue won
+		if (
+			words
+				.filter((word) => word.team === 'Blue')
+				.every((word) => word.revealed)
+		) {
+			await ctx.db.patch(args.gameId, {
+				clue: null,
+				guessThisRound: 0,
+				state: 'end',
+				winner: 'Blue',
+			});
+
+			await ctx.db.insert('gameLog', {
+				gameId: game._id,
+				message: `Blue won the game.`,
+				team: 'Grey',
 			});
 
 			ctx.scheduler.runAfter(1000 * 60, internal.game.deleteGame, {
@@ -199,3 +264,27 @@ export const checkRound = internalMutation({
 		}
 	},
 });
+
+// export const checkAITurn = internalMutation({
+// 	args: {
+// 		gameId: v.id('game'),
+// 	},
+// 	async handler(ctx, args) {
+// 		const game = await ctx.db.get(args.gameId);
+
+// 		if (!game) {
+// 			return;
+// 		}
+
+// 		const aiPlayers = await ctx.db
+// 			.query('player')
+// 			.filter((q) =>
+// 				q.and(
+// 					q.eq(q.field('gameId'), args.gameId),
+// 					q.eq(q.field('team'), game.currentTeam),
+// 					q.eq(q.field('role'), game.activeRole),
+// 					q.eq(q.field('type'), 'AI'),
+// 				)
+// 			);
+// 	},
+// });

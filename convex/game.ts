@@ -15,6 +15,7 @@ export const createGame = mutation({
 			activeRole: 'Spymaster',
 			clue: null,
 			guessThisRound: 0,
+			winner: null,
 		});
 		return { joinId: newGameId };
 	},
@@ -25,6 +26,7 @@ export const joinGame = mutation({
 		name: v.optional(v.string()),
 		joinId: v.id('game'),
 		session: v.optional(v.id('player')),
+		ai: v.optional(v.literal(true)),
 	},
 	handler: async (ctx, args) => {
 		//check if game exists
@@ -71,6 +73,7 @@ export const joinGame = mutation({
 			role: 'Spectator',
 			team: '',
 			host: isHost,
+			type: args.ai ? 'AI' : 'Player',
 		});
 		return { name: name, gameID: args.joinId, playerId: newPlayerId };
 	},
@@ -350,6 +353,14 @@ export const deleteGame = internalMutation({
 
 		words.forEach((word) => {
 			ctx.db.delete(word._id);
+		});
+		const gameLogs = await ctx.db
+			.query('gameLog')
+			.filter((q) => q.eq(q.field('gameId'), args.gameId))
+			.collect();
+
+		gameLogs.forEach((log) => {
+			ctx.db.delete(log._id);
 		});
 
 		const players = await ctx.db
