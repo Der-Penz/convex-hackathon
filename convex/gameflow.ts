@@ -101,7 +101,7 @@ export const guessWord = mutation({
 			};
 		}
 
-		if (!game.clue || game.guessThisRound >= game.clue.markedCards) {
+		if (!game.clue || game.guessThisRound >= game.clue.markedCards + 1) {
 			return {
 				executed: false,
 				message: 'All guesses used',
