@@ -41,7 +41,7 @@ function game({ gameId, playerId }: Props) {
 				sessionStorage.removeItem('session');
 				router.push('/');
 			}
-		}, 1000 * 10);
+		}, 1000 * 6);
 
 		return () => clearTimeout(timeout);
 	}, [game]);
@@ -67,13 +67,18 @@ function game({ gameId, playerId }: Props) {
 								{game.winner} won The game.
 							</AlertDialogTitle>
 							<AlertDialogDescription>
-								Congrats to:
+								Congrats to:{' '}
 								{allPlayers
 									.filter(
 										(player) => player.team === game.winner
 									)
-									.map((player) => (
-										<span>{player.name}, </span>
+									.map((player, i) => (
+										<>
+											<span>{player.name}</span>
+											{i < allPlayers.length - 1 && (
+												<span>, </span>
+											)}
+										</>
 									))}
 							</AlertDialogDescription>
 						</AlertDialogHeader>

@@ -7,6 +7,7 @@ import { useMutation, useQuery } from 'convex/react';
 import { useRouter } from 'next/navigation';
 import { useMemo } from 'react';
 import { FaCopy } from 'react-icons/fa';
+import { AiOutlineEye } from 'react-icons/ai';
 import { api } from '../../../../convex/_generated/api';
 import { Doc } from '../../../../convex/_generated/dataModel';
 import Board from './board';
@@ -49,6 +50,11 @@ function playing({ self, allPlayers, game }: Props) {
 		[allPlayers]
 	);
 
+	const spectators = useMemo(
+		() => allPlayers.filter((player) => player.role === 'Spectator').length,
+		[allPlayers]
+	);
+
 	if (!words) {
 		return <GameLoading message="Loading cards" />;
 	}
@@ -69,6 +75,10 @@ function playing({ self, allPlayers, game }: Props) {
 					<span className="grow"></span>
 					<TitleMessage self={self} game={game} />
 					<span className="grow"></span>
+					<div className='flex gap-1 items-center'>
+						<span>{spectators}</span>
+						<AiOutlineEye />
+					</div>
 					<Badge variant={'outline'}>{self?.name}</Badge>
 					<Button variant={'destructive'} onClick={leaveGame}>
 						Leave
@@ -106,7 +116,7 @@ function playing({ self, allPlayers, game }: Props) {
 				<div className="grow">
 					<Board words={words} self={self} game={game} />
 				</div>
-				<div className='self-stretch relative w-[15%] 2xl:w-[25%]'>
+				<div className="self-stretch relative w-[15%] 2xl:w-[25%]">
 					<GameLog gameId={game._id} />
 				</div>
 			</section>
