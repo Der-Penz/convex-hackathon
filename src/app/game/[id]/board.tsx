@@ -48,10 +48,11 @@ function Board({ self, words, game }: Props) {
 	}
 
 	return (
-		<div className='2xl:max-w-7xl mx-auto'>
+		<div className="2xl:max-w-7xl mx-auto">
 			<div className="grid grid-cols-5 gap-2">
 				{words.map((word) => (
 					<Card
+						key={word._id}
 						word={word}
 						spymaster={self.role === 'Spymaster'}
 						onClick={onCardClick}

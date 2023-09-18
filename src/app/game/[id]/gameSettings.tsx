@@ -107,8 +107,9 @@ export default function GameSettings({ settings, setSettings }: Props) {
 											Standard Collection
 										</SelectLabel>
 										{GAME_WORD_COLLECTIONS.map(
-											(collection) => (
+											(collection, i) => (
 												<SelectItem
+													key={i}
 													value={collection.name}
 												>
 													{collection.name}
@@ -157,7 +158,7 @@ export default function GameSettings({ settings, setSettings }: Props) {
 					</div>
 
 					<div className="flex gap-2 items-start flex-col">
-					<Label>Starting team</Label>
+						<Label>Starting team</Label>
 						<RadioGroup
 							value={settings.startingTeam}
 							onValueChange={(value) => {
