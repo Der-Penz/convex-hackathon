@@ -1,28 +1,18 @@
 'use client';
 
-import React, { useMemo } from 'react';
-import { Doc } from '../../../../convex/_generated/dataModel';
-import { useMutation, useQuery } from 'convex/react';
-import { api } from '../../../../convex/_generated/api';
-import Board from './board';
-import { useRouter } from 'next/navigation';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import TitleMessage from './titleMessage';
-import { FaCopy } from 'react-icons/fa';
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from '@/components/ui/card';
 import GameLoading from '@/components/loading/gameLoading';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { Separator } from '@/components/ui/separator';
-import IngameTeamCard from './ingameTeamCard';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { useMutation, useQuery } from 'convex/react';
+import { useRouter } from 'next/navigation';
+import { useMemo } from 'react';
+import { FaCopy } from 'react-icons/fa';
+import { api } from '../../../../convex/_generated/api';
+import { Doc } from '../../../../convex/_generated/dataModel';
+import Board from './board';
 import GameLog from './gameLog';
+import IngameTeamCard from './ingameTeamCard';
+import TitleMessage from './titleMessage';
 
 type Props = {
 	self: Doc<'player'>;
@@ -86,8 +76,8 @@ function playing({ self, allPlayers, game }: Props) {
 				</section>
 			</div>
 
-			<section className="flex max-w-8xl gap-2 m-2">
-				<div className="flex flex-col gap-2 w-[15%]">
+			<section className="flex max-w-8xl gap-2 m-2 relative h-80 items-stretch">
+				<div className="flex flex-col gap-2 w-[15%] 2xl:w-[25%]">
 					<IngameTeamCard
 						color={'Red'}
 						wordsLeft={
@@ -116,7 +106,9 @@ function playing({ self, allPlayers, game }: Props) {
 				<div className="grow">
 					<Board words={words} self={self} game={game} />
 				</div>
-				<GameLog gameId={game._id}/>
+				<div className='self-stretch relative w-[15%] 2xl:w-[25%]'>
+					<GameLog gameId={game._id} />
+				</div>
 			</section>
 		</div>
 	);

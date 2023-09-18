@@ -8,13 +8,12 @@ module.exports = {
 		'./src/**/*.{ts,tsx}',
 	],
 	safelist: [
-		'bg-red-500',
-		'bg-blue-500',
-		'bg-gray-300',
 		'bg-black',
-		'bg-amber-950',
 		'outline',
 		'outline-primary',
+		{
+			pattern: /(bg|text)-(red|blue|gray-amber)-(300|500|950)/,
+		},
 	],
 	theme: {
 		container: {

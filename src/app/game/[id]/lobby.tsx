@@ -82,7 +82,10 @@ function lobby({ self, allPlayers, gameId }: Props) {
 		<>
 			<section className="flex gap-2 p-2 border-b-2 items-center">
 				<h3 className="text-xl">
-					Game: <span className="font-extralight">{gameId}</span>
+					Game:{' '}
+					<span className="font-extralight">
+						{gameId.slice(0, 5)}...
+					</span>
 				</h3>
 				<Button variant={'ghost'} onClick={copyGameCode}>
 					<FaCopy />

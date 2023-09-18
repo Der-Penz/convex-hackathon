@@ -19,13 +19,14 @@ function Card({ spymaster, word, onClick }: Props) {
 		<AspectRatio
 			onClick={() => onClick(word)}
 			ratio={16 / 9}
-			className="hover:outline bg-muted relative overflow-hidden cursor-pointer rounded-md grid place-items-center select-none p-2 shadow-xl border-4 border-muted-foreground"
+			className="hover:outline group bg-muted relative overflow-hidden cursor-pointer rounded-md grid place-items-center select-none p-2 shadow-xl border-4 border-muted-foreground"
 		>
 			<p
 				className={cn(
-					'absolute bottom-1 z-10 font-bold w-11/12 bg-white/70 text-black text-center',
+					'absolute text-sm bottom-1 z-10 font-bold w-11/12 bg-white/70 text-black text-center',
+					"group-hover:opacity-100 transition-all",
 					{
-						invisible: word.revealed,
+						'opacity-0': word.revealed,
 					}
 				)}
 			>
