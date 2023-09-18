@@ -41,7 +41,7 @@ type Props = {
 	setSettings: Dispatch<SetStateAction<GameSettings>>;
 };
 
-export default function gameSettings({ settings, setSettings }: Props) {
+export default function GameSettings({ settings, setSettings }: Props) {
 	const selectedCollection = GAME_WORD_COLLECTIONS.find(
 		(collection) => collection.name === settings.collection
 	);

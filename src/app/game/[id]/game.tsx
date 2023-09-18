@@ -24,7 +24,7 @@ type Props = {
 	playerId: Id<'player'>;
 };
 
-function game({ gameId, playerId }: Props) {
+function Game({ gameId, playerId }: Props) {
 	const router = useRouter();
 	const self = useQuery(api.player.getPlayer, { playerId });
 	const game = useQuery(api.game.getGame, {
@@ -100,4 +100,4 @@ function game({ gameId, playerId }: Props) {
 	);
 }
 
-export default game;
+export default Game;

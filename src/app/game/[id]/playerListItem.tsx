@@ -18,7 +18,7 @@ type Props = {
 	self: Doc<'player'>;
 };
 
-function playerListItem({ player, self }: Props) {
+function PlayerListItem({ player, self }: Props) {
 	return (
 		<>
 			<TooltipProvider delayDuration={100} disableHoverableContent={true}>
@@ -62,4 +62,4 @@ function playerListItem({ player, self }: Props) {
 	);
 }
 
-export default playerListItem;
+export default PlayerListItem;

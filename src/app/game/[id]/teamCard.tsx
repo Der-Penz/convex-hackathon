@@ -32,7 +32,7 @@ type Props = {
 	allPlayers: Doc<'player'>[];
 };
 
-function teamCard({ color, self, allPlayers }: Props) {
+function TeamCard({ color, self, allPlayers }: Props) {
 	const joinTeamMutation = useMutation(api.game.joinTeam);
 	const inTeam = self.team === color;
 
@@ -132,4 +132,4 @@ function teamCard({ color, self, allPlayers }: Props) {
 	);
 }
 
-export default teamCard;
+export default TeamCard;

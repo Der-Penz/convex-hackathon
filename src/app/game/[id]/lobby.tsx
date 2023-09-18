@@ -31,7 +31,7 @@ type Props = {
 	gameId: Id<'game'>;
 };
 
-function lobby({ self, allPlayers, gameId }: Props) {
+function Lobby({ self, allPlayers, gameId }: Props) {
 	const [settings, setSettings] = useState<Settings>({
 		blackCard: true,
 		cardsToGuess: 9,
@@ -163,4 +163,4 @@ function lobby({ self, allPlayers, gameId }: Props) {
 	);
 }
 
-export default lobby;
+export default Lobby;

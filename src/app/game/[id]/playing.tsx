@@ -20,7 +20,7 @@ type Props = {
 	allPlayers: Doc<'player'>[];
 	game: Doc<'game'>;
 };
-function playing({ self, allPlayers, game }: Props) {
+function Playing({ self, allPlayers, game }: Props) {
 	const router = useRouter();
 	const words = useQuery(api.word.getWords, {
 		gameId: game._id,
@@ -124,4 +124,4 @@ function playing({ self, allPlayers, game }: Props) {
 	);
 }
 
-export default playing;
+export default Playing;

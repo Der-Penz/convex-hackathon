@@ -15,7 +15,7 @@ type Props = {
 	game: Doc<'game'>;
 };
 
-function board({ self, words, game }: Props) {
+function Board({ self, words, game }: Props) {
 	const [clue, setClue] = useState('');
 	const [markedCards, setMarkedCards] = useState(1);
 
@@ -97,4 +97,4 @@ function board({ self, words, game }: Props) {
 	);
 }
 
-export default board;
+export default Board;

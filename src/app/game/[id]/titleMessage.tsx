@@ -8,7 +8,7 @@ type Props = {
 	self: Doc<'player'>;
 };
 
-function calculateMessage(game: Doc<'game'>, self: Doc<'player'>) {
+function CalculateMessage(game: Doc<'game'>, self: Doc<'player'>) {
 	const activeRole = game.activeRole === self.role;
 
 	//spectators
@@ -50,7 +50,7 @@ function calculateMessage(game: Doc<'game'>, self: Doc<'player'>) {
 function TitleMessage({ game, self }: Props) {
 	return (
 		<h3 className="border py-1 px-4 font-bold rounded-md bg-muted shadow">
-			{calculateMessage(game, self)}
+			{CalculateMessage(game, self)}
 		</h3>
 	);
 }
