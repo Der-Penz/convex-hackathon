@@ -15,6 +15,8 @@ type Props = {
 	game: Doc<'game'>;
 };
 
+const MARKED_CARDS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, Number.POSITIVE_INFINITY];
+
 function Board({ self, words, game }: Props) {
 	const [clue, setClue] = useState('');
 	const [markedCards, setMarkedCards] = useState(1);
@@ -68,14 +70,27 @@ function Board({ self, words, game }: Props) {
 						value={clue}
 						onChange={(e) => setClue(e.target.value)}
 					/>
-					<Input
-						type="number"
-						className="w-20"
-						min={1}
-						max={10}
-						value={markedCards}
-						onChange={(e) => setMarkedCards(e.target.valueAsNumber)}
-					/>
+					<div className="group relative">
+						<Input
+							type="text"
+							className="w-20 peer text-center"
+							value={markedCards}
+						/>
+						<div className="invisible flex gap-1 p-2 rounded-lg bg-background group-hover:visible peer-focus:visible absolute z-50 top-0 -translate-y-full left-1/2 -translate-x-1/2">
+							{MARKED_CARDS.map((number) => (
+								<Button
+									variant={'secondary'}
+									onClick={() => {
+										setMarkedCards(number);
+									}}
+								>
+									{number === Number.POSITIVE_INFINITY
+										? '∞'
+										: number}
+								</Button>
+							))}
+						</div>
+					</div>
 					<Button
 						disabled={!clue || markedCards < 1}
 						onClick={giveClue}
