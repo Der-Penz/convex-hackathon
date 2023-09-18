@@ -1,5 +1,3 @@
-'use client'
-
 import ThemeProvider from '@/components/themeProvider';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
