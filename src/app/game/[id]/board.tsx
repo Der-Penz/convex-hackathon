@@ -79,6 +79,7 @@ function Board({ self, words, game }: Props) {
 						<div className="invisible flex gap-1 p-2 rounded-lg bg-background group-hover:visible peer-focus:visible absolute z-50 top-0 -translate-y-full left-1/2 -translate-x-1/2">
 							{MARKED_CARDS.map((number) => (
 								<Button
+									key={number}
 									variant={'secondary'}
 									onClick={() => {
 										setMarkedCards(number);
